@@ -49,8 +49,8 @@ public class Galk
     Thread t = new RequestListenerThread(8085);
      t.setDaemon(false);
      t.start();
-    if (args.length == 2 && args[0].equals("import"))
-      importFrom(args[1]);
+     //if (args.length == 2 && args[0].equals("import"))
+     //importFrom(args[1]);
   }
 
   static void importFrom(String fileName)
@@ -112,15 +112,39 @@ public class Galk
       System.out.println("Entity: " + new String(entityContent));
       response.setStatusCode(HttpStatus.SC_OK);
       //body = new StringEntity("true");
-      body = new StringEntity("<?xml version=”1.0” encoding=”UTF-8”?>" +
-			      "<wml>" +
-			      "<window>" +
-			      "<left>10</> <top>10</> <width>48</> <height>37</>" +
-			      "<caption>Título da janela</>" +
-			      "<autoclose>true</>" +
-			      "<onload>sendDeviceExternalMessage(PRINTER, 'ola'); sendDeviceExternalMessage(DISPLAY, 'no ecra'); sendDeviceExternalMessage(DRAWER, 'na gaveta'); sendDeviceExternalMessage(TPA, 'no tpa'); confirm('Deseja Fechar?');close();</>" +
-			      "</window>" +
-			      "</wml>");
+      body = new StringEntity(
+"<html lang=\"en\">" +
+"<head>" +
+"    <link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/css/ol.css\" type=\"text/css\">" +
+"    <style>" +
+"      .map {" +
+"        height: 400px;" +
+"        width: 100%;" +
+"      }" +
+"    </style>"+
+"    <script src=\"http://openlayers.org/en/v3.2.0/build/ol.js\" type=\"text/javascript\"></script>" +
+"    <title>OpenLayers 3 example</title>" +
+"  </head>" +
+"  <body>" +
+"    <h2>My Map</h2>" +
+"    <div id=\"map\" class=\"map\"></div>" +
+"    <script type=\"text/javascript\">" +
+"      var map = new ol.Map({" +
+"        target: 'map'," +
+"        layers: [" +
+"          new ol.layer.Tile({" +
+"            source: new ol.source.MapQuest({layer: 'sat'})" +
+"          })" +
+"        ]," +
+"        view: new ol.View({" +
+"          center: ol.proj.transform([37.41, 8.82], 'EPSG:4326', 'EPSG:3857')," +
+"          zoom: 4" +
+"        })" +
+"      });" +
+"    </script>" +
+"  </body>" +
+"</html>");
+      body.setContentType("text/html");
       response.setEntity(body);
       System.out.println("Responding ...");
     }
