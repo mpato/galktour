@@ -1,0 +1,2 @@
+Main-Class: com.inbiqeba.galk.Galk
+Class-Path: lib/commons-io-2.4.jar lib/httpcore-4.2.4.jar lib/json-simple-1.1.1.jar
