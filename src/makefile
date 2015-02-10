@@ -10,10 +10,10 @@ all: ../galk.jar
 ../galk.jar: $(ALL_CLASSES) $(EMBEDDED_GZ) makefile
 	@set -e; echo -e "CPIO\t$@";					\
 	$(JAVAC) $(JAVAFLAGS) $(ALL_CLASSES);				\
-	$(JAR) $(JARFLAGS) galk.jar Manifest.txt `find com/ -name "*.class"`        
+	$(JAR) $(JARFLAGS) ../galk.jar Manifest.txt `find com/ -name "*.class"`        
 
 clean:	
-	rm galk.jar
+	rm ../galk.jar
 	rm -rf *.d *.cp doc/
 	find com/ -name "*.class" -exec rm -f {} \;
 

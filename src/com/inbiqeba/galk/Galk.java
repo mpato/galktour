@@ -7,6 +7,15 @@ import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Locale;
+import com.inbiqeba.galk.gui.PixelLength;
+import com.inbiqeba.galk.gui.RelativeLength;
+import com.inbiqeba.galk.map.Map;
+import com.inbiqeba.galk.map.TileLayer;
+import com.inbiqeba.galk.map.View;
+import com.inbiqeba.galk.map.coordinates.PlainCoordinates;
+import com.inbiqeba.galk.map.coordinates.Transform;
+import com.inbiqeba.galk.map.sources.MapQuestSource;
+import com.inbiqeba.galk.screen.MapScreen;
 import org.apache.commons.io.IOUtils;
 
 import org.apache.http.ConnectionClosedException;
@@ -58,7 +67,7 @@ public class Galk
     System.out.println("Importing from " + fileName);
     String json;
     FileInputStream inputStream;
-   
+
     try {
       inputStream = new FileInputStream(fileName);
       try {
@@ -95,6 +104,7 @@ public class Galk
       HttpEntity entity;
       byte[] entityContent;
       StringEntity body;
+      Map map;
 
       entity = null;
       entityContent = new byte[0];
@@ -112,7 +122,7 @@ public class Galk
       System.out.println("Entity: " + new String(entityContent));
       response.setStatusCode(HttpStatus.SC_OK);
       //body = new StringEntity("true");
-      body = new StringEntity(
+      /*body = new StringEntity(
 "<html lang=\"en\">" +
 "<head>" +
 "    <link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/css/ol.css\" type=\"text/css\">" +
@@ -143,7 +153,10 @@ public class Galk
 "      });" +
 "    </script>" +
 "  </body>" +
-"</html>");
+"</html>");*/
+      map = new Map(new View(new Transform(new PlainCoordinates(37.41, 8.82), "EPSG:4326", "EPSG:3857"), 4), new RelativeLength(100), new RelativeLength(100));
+      map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_SAT)));
+      body = new StringEntity(new MapScreen("Test map", map).toHTML());
       body.setContentType("text/html");
       response.setEntity(body);
       System.out.println("Responding ...");

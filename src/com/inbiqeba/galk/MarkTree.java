@@ -46,6 +46,10 @@ class MarkTree
       return JSON_PARSE_OK;
     }
 
+    //These operations are safe and the warnings stern from bad design decisions
+    // from the author of the JSON lib we are using. Not a big deal,
+    // but kind of ugly
+    @SuppressWarnings("unchecked")
     public JSONObject toJSON()
     {
       JSONObject jurl;
@@ -130,6 +134,7 @@ class MarkTree
       return JSON_PARSE_OK;
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject toJSON(String tag)
     {
       JSONObject jfolder;
@@ -176,6 +181,7 @@ class MarkTree
     return JSON_PARSE_OK;
   }
 
+  @SuppressWarnings("unchecked")
   public JSONObject toJSON()
   {
     JSONObject jtop, jroots;
