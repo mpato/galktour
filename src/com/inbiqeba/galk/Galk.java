@@ -7,14 +7,17 @@ import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Locale;
-import com.inbiqeba.galk.gui.PixelLength;
 import com.inbiqeba.galk.gui.RelativeLength;
+import com.inbiqeba.galk.map.Feature;
 import com.inbiqeba.galk.map.Map;
-import com.inbiqeba.galk.map.TileLayer;
+import com.inbiqeba.galk.map.layers.TileLayer;
 import com.inbiqeba.galk.map.View;
 import com.inbiqeba.galk.map.coordinates.PlainCoordinates;
 import com.inbiqeba.galk.map.coordinates.Transform;
+import com.inbiqeba.galk.map.layers.VectorLayer;
+import com.inbiqeba.galk.map.sources.FeatureSource;
 import com.inbiqeba.galk.map.sources.MapQuestSource;
+import com.inbiqeba.galk.map.sources.TileJSON;
 import com.inbiqeba.galk.screen.MapScreen;
 import org.apache.commons.io.IOUtils;
 
@@ -105,6 +108,7 @@ public class Galk
       byte[] entityContent;
       StringEntity body;
       Map map;
+      FeatureSource features;
 
       entity = null;
       entityContent = new byte[0];
@@ -121,41 +125,12 @@ public class Galk
 
       System.out.println("Entity: " + new String(entityContent));
       response.setStatusCode(HttpStatus.SC_OK);
-      //body = new StringEntity("true");
-      /*body = new StringEntity(
-"<html lang=\"en\">" +
-"<head>" +
-"    <link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/css/ol.css\" type=\"text/css\">" +
-"    <style>" +
-"      .map {" +
-"        height: 400px;" +
-"        width: 100%;" +
-"      }" +
-"    </style>"+
-"    <script src=\"http://openlayers.org/en/v3.2.0/build/ol.js\" type=\"text/javascript\"></script>" +
-"    <title>OpenLayers 3 example</title>" +
-"  </head>" +
-"  <body>" +
-"    <h2>My Map</h2>" +
-"    <div id=\"map\" class=\"map\"></div>" +
-"    <script type=\"text/javascript\">" +
-"      var map = new ol.Map({" +
-"        target: 'map'," +
-"        layers: [" +
-"          new ol.layer.Tile({" +
-"            source: new ol.source.MapQuest({layer: 'sat'})" +
-"          })" +
-"        ]," +
-"        view: new ol.View({" +
-"          center: ol.proj.transform([37.41, 8.82], 'EPSG:4326', 'EPSG:3857')," +
-"          zoom: 4" +
-"        })" +
-"      });" +
-"    </script>" +
-"  </body>" +
-"</html>");*/
       map = new Map(new View(new Transform(new PlainCoordinates(37.41, 8.82), "EPSG:4326", "EPSG:3857"), 4), new RelativeLength(100), new RelativeLength(100));
+      features = new FeatureSource();
+      features.addFeature(new Feature());
+      map.addLayer(new VectorLayer(features));
       map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_SAT)));
+      //map.addLayer(new TileLayer(new TileJSON("http://api.tiles.mapbox.com/v3/mapbox.geography-class.jsonp", "")));
       body = new StringEntity(new MapScreen("Test map", map).toHTML());
       body.setContentType("text/html");
       response.setEntity(body);
@@ -251,7 +226,8 @@ public class Galk
       } catch (ConnectionClosedException ex) {
         System.err.println("Client closed connection");
       } catch (IOException ex) {
-        System.err.println("I/O error: " + ex.getMessage());
+        System.err.println("I/O error: " + ex.getStackTrace());
+        ex.printStackTrace();
       } catch (HttpException ex) {
         System.err.println("Unrecoverable HTTP protocol violation: " + ex.getMessage());
       } finally {

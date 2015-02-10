@@ -2,7 +2,7 @@ package com.inbiqeba.galk.map.sources;
 
 import com.inbiqeba.galk.map.Source;
 
-public class MapQuestSource implements Source
+public class MapQuestSource implements TileSource
 {
   public static final int TYPE_SAT = 0;
 
