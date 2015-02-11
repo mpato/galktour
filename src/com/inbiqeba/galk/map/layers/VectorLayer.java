@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.map.layers;
 
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 import com.inbiqeba.galk.map.Layer;
 import com.inbiqeba.galk.map.sources.TileSource;
 import com.inbiqeba.galk.map.sources.VectorSource;
@@ -14,7 +15,7 @@ public class VectorLayer implements Layer
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
     return "new ol.layer.Vector({" +
            "            source: " + source.toJavaScript() +

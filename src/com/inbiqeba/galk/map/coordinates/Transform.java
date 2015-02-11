@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.map.coordinates;
 
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 import com.inbiqeba.galk.map.Coordinates;
 
 public class Transform implements Coordinates
@@ -15,8 +16,13 @@ public class Transform implements Coordinates
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
-    return "ol.proj.transform(" + src.toJavaScript() + ", '" + srcType + "', '" + destType + "')";
+    JavaScriptSnippet snippet;
+    snippet = new JavaScriptSnippet();
+    snippet.add("ol.proj.transform(");
+    snippet.add(src.toJavaScript());
+    snippet.add(", '" + srcType + "', '" + destType + "')");
+    return snippet;
   }
 }

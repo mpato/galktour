@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.map.sources;
 
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 import com.inbiqeba.galk.map.Source;
 
 public class MapQuestSource implements TileSource
@@ -14,7 +15,7 @@ public class MapQuestSource implements TileSource
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
     String typeStr;
     switch(type) {

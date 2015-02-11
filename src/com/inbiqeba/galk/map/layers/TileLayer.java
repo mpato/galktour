@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.map.layers;
 
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 import com.inbiqeba.galk.map.Layer;
 import com.inbiqeba.galk.map.Source;
 import com.inbiqeba.galk.map.sources.TileSource;
@@ -14,10 +15,11 @@ public class TileLayer implements Layer
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
-    return "new ol.layer.Tile({" +
-           "            source: " + source.toJavaScript() +
-           "          })";
+    JavaScriptSnippet snippet;
+
+    return "new ol.layer.Tile({source: " + source.toJavaScript() +
+           "})";
   }
 }

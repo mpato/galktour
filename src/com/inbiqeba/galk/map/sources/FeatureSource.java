@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.map.sources;
 
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 import com.inbiqeba.galk.map.Feature;
 import java.util.Vector;
 
@@ -17,7 +18,7 @@ public class FeatureSource implements VectorSource
     features.add(feature);
   }
 
-  public String featuresToJavaScript()
+  public JavaScriptSnippet featuresToJavaScript()
   {
     String ret;
     int i = 0;

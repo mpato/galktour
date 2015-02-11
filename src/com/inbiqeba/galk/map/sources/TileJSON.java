@@ -1,5 +1,7 @@
 package com.inbiqeba.galk.map.sources;
 
+import com.inbiqeba.galk.html.JavaScriptSnippet;
+
 public class TileJSON implements TileSource
 {
   private String url;
@@ -12,7 +14,7 @@ public class TileJSON implements TileSource
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
     return "\nnew ol.layer.Tile({" +
            "\n  source: new ol.source.TileJSON({" +

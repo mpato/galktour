@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.map.coordinates;
 
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 import com.inbiqeba.galk.map.Coordinates;
 
 public class PlainCoordinates implements Coordinates
@@ -13,8 +14,8 @@ public class PlainCoordinates implements Coordinates
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
-    return String.format("[%.4f, %.4f]", x, y);
+    return new JavaScriptSnippet(String.format("[%.4f, %.4f]", x, y));
   }
 }

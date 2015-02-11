@@ -2,6 +2,7 @@ package com.inbiqeba.galk.map;
 
 import com.inbiqeba.galk.gui.geometry.GeometryPoint;
 import com.inbiqeba.galk.html.JavaScriptComponent;
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 
 public class Feature implements JavaScriptComponent
 {
@@ -15,7 +16,7 @@ public class Feature implements JavaScriptComponent
   }*/
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
     String style;
     style = "new ol.style.Style({ image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({anchor: [0.5, 46], anchorXUnits: 'fraction'," +
