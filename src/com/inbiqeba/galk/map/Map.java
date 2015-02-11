@@ -2,9 +2,11 @@ package com.inbiqeba.galk.map;
 
 import com.inbiqeba.galk.gui.Length;
 import com.inbiqeba.galk.html.HtmlComponent;
+import com.inbiqeba.galk.html.JavaScriptComponent;
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 import java.util.Vector;
 
-public class Map implements HtmlComponent
+public class Map implements HtmlComponent, JavaScriptComponent
 {
   private Vector<Layer> layers;
   private View view;
@@ -32,34 +34,47 @@ public class Map implements HtmlComponent
   }
 
 
-  private String layersToJavaScript()
+  private JavaScriptSnippet layersToJavaScript()
   {
-    String ret;
+    JavaScriptSnippet ret;
     int i = 0;
     if (layers.size() == 0)
-      return "nil";
-    ret = "[";
+      return new JavaScriptSnippet("nil");
+    ret = new JavaScriptSnippet();
+    ret.add("[");
     for (Layer layer: layers) {
       if (i != 0)
-        ret += ", ";
-      ret += layer.toJavaScript();
+        ret.add(", ");
+      ret.add(layer.toJavaScript());
       i++;
     }
-    ret += "]";
+    ret.add("]");
     return ret;
   }
 
+  @Override
+  public JavaScriptSnippet toJavaScript()
+  {
+    JavaScriptSnippet snippet;
+    snippet = new JavaScriptSnippet();
+    snippet.add("\n      var map = new ol.Map({" +
+    //            "\n   renderer: exampleNS.getRendererFromQueryString()," +
+    "\n        target: 'map', " +
+    "\n        layers:");
+    snippet.add(layersToJavaScript());
+    snippet.add(", " +
+    "\n        view: ");
+    snippet.add(view.toJavaScript());
+    snippet.add("\n      });");
+    return snippet;
+  }
 
   @Override
   public String toHTML()
   {
     return "<div id='map' class='map'></div>" +
            "\n<script type=\"text/javascript\">" +
-           "\n      var map = new ol.Map({" +
-           "\n        target: 'map', " +
-           "\n        layers:" + layersToJavaScript() + ", " +
-           "\n        view: " + view.toJavaScript() +
-           "\n      });" +
+           "\n" + toJavaScript() +
            "\n</script>";
   }
 

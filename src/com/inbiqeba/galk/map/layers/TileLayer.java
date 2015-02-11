@@ -18,8 +18,11 @@ public class TileLayer implements Layer
   public JavaScriptSnippet toJavaScript()
   {
     JavaScriptSnippet snippet;
+    snippet = new JavaScriptSnippet();
+    snippet.add("new ol.layer.Tile({source: ");
+    snippet.add(source.toJavaScript());
+    snippet.add("})");
 
-    return "new ol.layer.Tile({source: " + source.toJavaScript() +
-           "})";
+    return  snippet;
   }
 }

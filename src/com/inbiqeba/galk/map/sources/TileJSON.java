@@ -16,11 +16,11 @@ public class TileJSON implements TileSource
   @Override
   public JavaScriptSnippet toJavaScript()
   {
-    return "\nnew ol.layer.Tile({" +
+    return new JavaScriptSnippet("\nnew ol.layer.Tile({" +
            "\n  source: new ol.source.TileJSON({" +
            "\n     url: '" + url + "',"+
            "\n     crossOrigin: '" + crossOrigin +  "'"+
            "\n  })" +
-           "\n})";
+           "\n})");
   }
 }

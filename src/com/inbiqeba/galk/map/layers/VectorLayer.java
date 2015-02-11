@@ -17,8 +17,11 @@ public class VectorLayer implements Layer
   @Override
   public JavaScriptSnippet toJavaScript()
   {
-    return "new ol.layer.Vector({" +
-           "            source: " + source.toJavaScript() +
-           "          })";
+    JavaScriptSnippet snippet;
+    snippet = new JavaScriptSnippet();
+    snippet.add("new ol.layer.Vector({source: ");
+    snippet.add(source.toJavaScript());
+    snippet.add("})");
+    return  snippet;
   }
 }

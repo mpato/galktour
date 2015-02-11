@@ -117,6 +117,7 @@ public class Galk
         throw new MethodNotSupportedException(method + " method not supported");
       }
       target = request.getRequestLine().getUri();
+      System.out.println(request);
       if (request instanceof HttpEntityEnclosingRequest) {
         entity = ((HttpEntityEnclosingRequest) request).getEntity();
         entityContent = EntityUtils.toByteArray(entity);
@@ -125,11 +126,12 @@ public class Galk
 
       System.out.println("Entity: " + new String(entityContent));
       response.setStatusCode(HttpStatus.SC_OK);
-      map = new Map(new View(new Transform(new PlainCoordinates(37.41, 8.82), "EPSG:4326", "EPSG:3857"), 4), new RelativeLength(100), new RelativeLength(100));
+     // map = new Map(new View(new Transform(new PlainCoordinates(37.41, 8.82), "EPSG:4326", "EPSG:3857"), 4), new RelativeLength(100), new RelativeLength(100));
+      map = new Map(new View(new PlainCoordinates(0, 0), 4), new RelativeLength(100), new RelativeLength(100));
       features = new FeatureSource();
       features.addFeature(new Feature());
-      map.addLayer(new VectorLayer(features));
       map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_SAT)));
+      map.addLayer(new VectorLayer(features));
       //map.addLayer(new TileLayer(new TileJSON("http://api.tiles.mapbox.com/v3/mapbox.geography-class.jsonp", "")));
       body = new StringEntity(new MapScreen("Test map", map).toHTML());
       body.setContentType("text/html");

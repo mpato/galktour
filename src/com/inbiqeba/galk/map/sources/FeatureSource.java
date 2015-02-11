@@ -20,24 +20,30 @@ public class FeatureSource implements VectorSource
 
   public JavaScriptSnippet featuresToJavaScript()
   {
-    String ret;
+    JavaScriptSnippet ret;
     int i = 0;
     if (features.size() == 0)
-      return "nil";
-    ret = "[";
+      return new JavaScriptSnippet("nil");
+    ret = new JavaScriptSnippet();
+    ret.add("[");
     for (Feature feature: features) {
       if (i != 0)
-        ret += ", ";
-      ret += feature.toJavaScript();
+        ret.add(", ");
+      ret.add(feature.toJavaScript());
       i++;
     }
-    ret += "]";
+    ret.add("]");
     return ret;
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
-    return "new ol.source.Vector({features: " + featuresToJavaScript() + "})";
+    JavaScriptSnippet snippet;
+    snippet = new JavaScriptSnippet();
+    snippet.add("new ol.source.Vector({features: ");
+    snippet.add(featuresToJavaScript());
+    snippet.add("})");
+    return snippet ;
   }
 }

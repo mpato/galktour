@@ -23,7 +23,6 @@ public class MapQuestSource implements TileSource
         typeStr = "sat";
         break;
     }
-
-    return "new ol.source.MapQuest({layer: '" + typeStr + "'})";
+    return new JavaScriptSnippet("new ol.source.MapQuest({layer: '" + typeStr + "'})");
   }
 }

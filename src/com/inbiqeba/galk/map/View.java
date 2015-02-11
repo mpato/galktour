@@ -1,6 +1,7 @@
 package com.inbiqeba.galk.map;
 
 import com.inbiqeba.galk.html.JavaScriptComponent;
+import com.inbiqeba.galk.html.JavaScriptSnippet;
 
 public class View implements JavaScriptComponent
 {
@@ -14,11 +15,13 @@ public class View implements JavaScriptComponent
   }
 
   @Override
-  public String toJavaScript()
+  public JavaScriptSnippet toJavaScript()
   {
-    return "new ol.View({" +
-                        "          center:" + center.toJavaScript() + ", " +
-                        "          zoom: " + zoom +
-                        "        })";
+    JavaScriptSnippet snippet;
+    snippet = new JavaScriptSnippet();
+    snippet.add("new ol.View({center:");
+    snippet.add(center.toJavaScript());
+    snippet.add(", zoom:" + zoom +"})");
+    return snippet;
   }
 }
