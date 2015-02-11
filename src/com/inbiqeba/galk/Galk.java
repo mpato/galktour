@@ -1,5 +1,32 @@
 package com.inbiqeba.galk;
 
+import com.inbiqeba.galk.gui.RelativeLength;
+import com.inbiqeba.galk.gui.geometry.GeometryPoint;
+import com.inbiqeba.galk.map.Feature;
+import com.inbiqeba.galk.map.Map;
+import com.inbiqeba.galk.map.View;
+import com.inbiqeba.galk.map.coordinates.PlainCoordinates;
+import com.inbiqeba.galk.map.layers.TileLayer;
+import com.inbiqeba.galk.map.layers.VectorLayer;
+import com.inbiqeba.galk.map.sources.FeatureSource;
+import com.inbiqeba.galk.map.sources.FeatureSourceConverter;
+import com.inbiqeba.galk.map.sources.MapQuestSource;
+import com.inbiqeba.galk.screen.MapScreen;
+import com.inbiqeba.galk.sql.SQLiteDatabase;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.*;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.DefaultConnectionReuseStrategy;
+import org.apache.http.impl.DefaultHttpResponseFactory;
+import org.apache.http.impl.DefaultHttpServerConnection;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.SyncBasicHttpParams;
+import org.apache.http.protocol.*;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,62 +34,26 @@ import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Locale;
-import com.inbiqeba.galk.gui.RelativeLength;
-import com.inbiqeba.galk.map.Feature;
-import com.inbiqeba.galk.map.Map;
-import com.inbiqeba.galk.map.layers.TileLayer;
-import com.inbiqeba.galk.map.View;
-import com.inbiqeba.galk.map.coordinates.PlainCoordinates;
-import com.inbiqeba.galk.map.coordinates.Transform;
-import com.inbiqeba.galk.map.layers.VectorLayer;
-import com.inbiqeba.galk.map.sources.FeatureSource;
-import com.inbiqeba.galk.map.sources.MapQuestSource;
-import com.inbiqeba.galk.map.sources.TileJSON;
-import com.inbiqeba.galk.screen.MapScreen;
-import org.apache.commons.io.IOUtils;
-
-import org.apache.http.ConnectionClosedException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.HttpServerConnection;
-import org.apache.http.HttpStatus;
-import org.apache.http.MethodNotSupportedException;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.DefaultConnectionReuseStrategy;
-import org.apache.http.impl.DefaultHttpResponseFactory;
-import org.apache.http.impl.DefaultHttpServerConnection;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.SyncBasicHttpParams;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpProcessor;
-import org.apache.http.protocol.HttpRequestHandler;
-import org.apache.http.protocol.HttpRequestHandlerRegistry;
-import org.apache.http.protocol.HttpService;
-import org.apache.http.protocol.ImmutableHttpProcessor;
-import org.apache.http.protocol.ResponseConnControl;
-import org.apache.http.protocol.ResponseContent;
-import org.apache.http.protocol.ResponseDate;
-import org.apache.http.protocol.ResponseServer;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 public class Galk
 {
+  private static FeatureDataSet featureDataSet;
+
   public static void main(String[] args) throws Exception
   {
-    Thread t = new RequestListenerThread(8085);
-     t.setDaemon(false);
-     t.start();
-     //if (args.length == 2 && args[0].equals("import"))
-     //importFrom(args[1]);
+    Thread t;
+    ApplicationContext.debug = false;
+    ApplicationContext.dataSource = new SQLiteDatabase("galktour");
+    ApplicationContext.dataSource.initialize();
+    featureDataSet = new FeatureDataSet();
+    ApplicationContext.addDataSet("feature", featureDataSet);
+    featureDataSet.insertNewRecord(new Feature(new GeometryPoint(0,0), "Zero island", 1));
+    featureDataSet.insertNewRecord(new Feature(new GeometryPoint(10,10), "Some other point island", 2));
+    t = new RequestListenerThread(8085);
+    t.setDaemon(false);
+    t.start();
+    //if (args.length == 2 && args[0].equals("import"))
+    //importFrom(args[1]);
   }
 
   static void importFrom(String fileName)
@@ -127,10 +118,13 @@ public class Galk
       System.out.println("Entity: " + new String(entityContent));
       response.setStatusCode(HttpStatus.SC_OK);
      // map = new Map(new View(new Transform(new PlainCoordinates(37.41, 8.82), "EPSG:4326", "EPSG:3857"), 4), new RelativeLength(100), new RelativeLength(100));
-      map = new Map(new View(new PlainCoordinates(0, 0), 4), new RelativeLength(100), new RelativeLength(100));
+      map = new Map(new View(new PlainCoordinates(0, 0), 4), new RelativeLength(50), new RelativeLength(100));
+      FeatureSourceConverter converter;
       features = new FeatureSource();
-      features.addFeature(new Feature());
-      map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_SAT)));
+      converter = new FeatureSourceConverter(features);
+      featureDataSet.map(converter);
+      //features.addFeature(new Feature());
+      map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_OSM)));
       map.addLayer(new VectorLayer(features));
       //map.addLayer(new TileLayer(new TileJSON("http://api.tiles.mapbox.com/v3/mapbox.geography-class.jsonp", "")));
       body = new StringEntity(new MapScreen("Test map", map).toHTML());
@@ -150,7 +144,7 @@ public class Galk
     {
       this.serversocket = new ServerSocket(port);
       this.params = new SyncBasicHttpParams();
-      this.params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 5000)
+      this.params/*.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 5000)*/
               .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024)
               .setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, false)
               .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true)

@@ -5,7 +5,18 @@ import com.inbiqeba.galk.html.JavaScriptSnippet;
 
 public class GeometryPoint implements JavaScriptComponent
 {
+
   private double x, y;
+
+  public double getX()
+  {
+    return x;
+  }
+
+  public double getY()
+  {
+    return y;
+  }
 
   public GeometryPoint(double x, double y)
   {

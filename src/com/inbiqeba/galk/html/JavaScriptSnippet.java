@@ -1,5 +1,7 @@
 package com.inbiqeba.galk.html;
 
+import com.inbiqeba.galk.ApplicationContext;
+
 public class JavaScriptSnippet
 {
   private String initialization;
@@ -21,6 +23,15 @@ public class JavaScriptSnippet
     this.inline = inline;
   }
 
+  private String formatString(String str)
+  {
+    if (ApplicationContext.isDebug())
+      str = str.replace("\n", "\n\t");
+    else
+      str = str.replaceAll("[\n\t]", "");
+    return str;
+  }
+
   public void addInitialization(String str)
   {
     initialization += str;
@@ -28,7 +39,7 @@ public class JavaScriptSnippet
 
   public void add(String str)
   {
-    inline += str;
+    inline += formatString(str);
   }
 
   public void add(JavaScriptSnippet snippet)

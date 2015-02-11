@@ -6,6 +6,7 @@ import com.inbiqeba.galk.map.Source;
 public class MapQuestSource implements TileSource
 {
   public static final int TYPE_SAT = 0;
+  public static final int TYPE_OSM = 1;
 
   private int type;
 
@@ -19,6 +20,9 @@ public class MapQuestSource implements TileSource
   {
     String typeStr;
     switch(type) {
+      case TYPE_OSM:
+        typeStr = "osm";
+        break;
       default:
         typeStr = "sat";
         break;
