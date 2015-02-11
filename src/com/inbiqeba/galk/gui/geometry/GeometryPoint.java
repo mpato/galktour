@@ -16,6 +16,6 @@ public class GeometryPoint implements JavaScriptComponent
   @Override
   public JavaScriptSnippet toJavaScript()
   {
-    return String.format("new ol.geom.Point([%.4f, %.4f])", x, y);
+    return new JavaScriptSnippet(String.format("new ol.geom.Point([%.4f, %.4f])", x, y));
   }
 }
