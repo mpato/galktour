@@ -2,16 +2,18 @@ package com.inbiqeba.galk;
 
 import com.inbiqeba.galk.gui.RelativeLength;
 import com.inbiqeba.galk.gui.geometry.GeometryPoint;
-import com.inbiqeba.galk.map.Feature;
-import com.inbiqeba.galk.map.Map;
-import com.inbiqeba.galk.map.View;
-import com.inbiqeba.galk.map.coordinates.PlainCoordinates;
-import com.inbiqeba.galk.map.layers.TileLayer;
-import com.inbiqeba.galk.map.layers.VectorLayer;
-import com.inbiqeba.galk.map.sources.FeatureSource;
-import com.inbiqeba.galk.map.sources.FeatureSourceConverter;
-import com.inbiqeba.galk.map.sources.MapQuestSource;
-import com.inbiqeba.galk.screen.MapScreen;
+import com.inbiqeba.galk.html.map.Feature;
+import com.inbiqeba.galk.html.map.Map;
+import com.inbiqeba.galk.html.map.View;
+import com.inbiqeba.galk.html.map.coordinates.PlainCoordinates;
+import com.inbiqeba.galk.html.map.layers.TileLayer;
+import com.inbiqeba.galk.html.map.layers.VectorLayer;
+import com.inbiqeba.galk.html.map.sources.FeatureSource;
+import com.inbiqeba.galk.html.map.sources.FeatureSourceConverter;
+import com.inbiqeba.galk.html.map.sources.MapQuestSource;
+import com.inbiqeba.galk.html.page.MapPage;
+import com.inbiqeba.galk.sql.SQLFilteredTable;
+import com.inbiqeba.galk.sql.SQLTable;
 import com.inbiqeba.galk.sql.SQLiteDatabase;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
@@ -37,7 +39,7 @@ import java.util.Locale;
 
 public class Galk
 {
-  private static FeatureDataSet featureDataSet;
+  private static SQLTable<Feature> featureDataSet;
 
   public static void main(String[] args) throws Exception
   {
@@ -46,6 +48,7 @@ public class Galk
     ApplicationContext.dataSource = new SQLiteDatabase("galktour");
     ApplicationContext.dataSource.initialize();
     featureDataSet = new FeatureDataSet();
+    featureDataSet = new SQLFilteredTable<Feature>(featureDataSet).filter("id", SQLFilteredTable.OP_EQUAL, 2);
     ApplicationContext.addDataSet("feature", featureDataSet);
     featureDataSet.insertNewRecord(new Feature(new GeometryPoint(0,0), "Zero island", 1));
     featureDataSet.insertNewRecord(new Feature(new GeometryPoint(10,10), "Some other point island", 2));
@@ -127,7 +130,7 @@ public class Galk
       map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_OSM)));
       map.addLayer(new VectorLayer(features));
       //map.addLayer(new TileLayer(new TileJSON("http://api.tiles.mapbox.com/v3/mapbox.geography-class.jsonp", "")));
-      body = new StringEntity(new MapScreen("Test map", map).toHTML());
+      body = new StringEntity(new MapPage("Test map", map).toHTML());
       body.setContentType("text/html");
       response.setEntity(body);
       System.out.println("Responding ...");

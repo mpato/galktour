@@ -1,4 +1,4 @@
-package com.inbiqeba.galk.map.sources;
+package com.inbiqeba.galk.html.map.sources;
 
 import com.inbiqeba.galk.html.JavaScriptSnippet;
 

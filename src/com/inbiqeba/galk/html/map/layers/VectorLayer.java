@@ -1,9 +1,8 @@
-package com.inbiqeba.galk.map.layers;
+package com.inbiqeba.galk.html.map.layers;
 
 import com.inbiqeba.galk.html.JavaScriptSnippet;
-import com.inbiqeba.galk.map.Layer;
-import com.inbiqeba.galk.map.sources.TileSource;
-import com.inbiqeba.galk.map.sources.VectorSource;
+import com.inbiqeba.galk.html.map.Layer;
+import com.inbiqeba.galk.html.map.sources.VectorSource;
 
 public class VectorLayer implements Layer
 {

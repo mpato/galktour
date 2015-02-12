@@ -1,6 +1,6 @@
-package com.inbiqeba.galk.map.sources;
+package com.inbiqeba.galk.html.map.sources;
 
-import com.inbiqeba.galk.map.Feature;
+import com.inbiqeba.galk.html.map.Feature;
 import com.inbiqeba.galk.sql.SQLSetConverter;
 
 public class FeatureSourceConverter implements SQLSetConverter<Feature>

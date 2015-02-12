@@ -1,7 +1,7 @@
-package com.inbiqeba.galk.map.coordinates;
+package com.inbiqeba.galk.html.map.coordinates;
 
 import com.inbiqeba.galk.html.JavaScriptSnippet;
-import com.inbiqeba.galk.map.Coordinates;
+import com.inbiqeba.galk.html.map.Coordinates;
 
 public class Transform implements Coordinates
 {

@@ -1,7 +1,6 @@
-package com.inbiqeba.galk.map.sources;
+package com.inbiqeba.galk.html.map.sources;
 
 import com.inbiqeba.galk.html.JavaScriptSnippet;
-import com.inbiqeba.galk.map.Source;
 
 public class MapQuestSource implements TileSource
 {

@@ -1,7 +1,6 @@
 package com.inbiqeba.galk;
 
-import com.inbiqeba.galk.gui.geometry.GeometryPoint;
-import com.inbiqeba.galk.map.Feature;
+import com.inbiqeba.galk.html.map.Feature;
 import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLTable;
 import java.util.Vector;
@@ -36,6 +35,12 @@ public class FeatureDataSet extends SQLTable<Feature>
   {
     if (ApplicationContext.dataSource instanceof SQLDatabase)
       return (SQLDatabase)ApplicationContext.dataSource;
+    return null;
+  }
+
+  @Override
+  public String getWhereClause()
+  {
     return null;
   }
 

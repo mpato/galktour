@@ -1,4 +1,4 @@
-package com.inbiqeba.galk.map;
+package com.inbiqeba.galk.html.map;
 
 import com.inbiqeba.galk.FeatureDataSet;
 import com.inbiqeba.galk.gui.geometry.GeometryPoint;

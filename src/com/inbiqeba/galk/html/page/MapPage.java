@@ -1,14 +1,14 @@
-package com.inbiqeba.galk.screen;
+package com.inbiqeba.galk.html.page;
 
 import com.inbiqeba.galk.html.HtmlComponent;
-import com.inbiqeba.galk.map.Map;
+import com.inbiqeba.galk.html.map.Map;
 
-public class MapScreen implements HtmlComponent
+public class MapPage implements HtmlComponent
 {
   private String title;
   private Map map;
 
-  public MapScreen(String title, Map map)
+  public MapPage(String title, Map map)
   {
     this.title = title;
     this.map = map;

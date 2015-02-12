@@ -11,6 +11,7 @@ public abstract class SQLTable<T extends SQLObject> implements DataSet<T>
   public abstract String getTableName();
   public abstract T createEmptyRecord();
   public abstract SQLDatabase getSQLDatabase();
+  public abstract String getWhereClause();
 
   @Override
   public boolean insertNewRecord(T record)
@@ -27,11 +28,15 @@ public abstract class SQLTable<T extends SQLObject> implements DataSet<T>
   {
     SQLDatabase database;
     ResultSet rs;
+    String whereClause, query;
     T record;
     database = getSQLDatabase();
     if (database == null)
       return;
-    rs = database.executeQuery("select * from " + getTableName());
+    whereClause = getWhereClause();
+    whereClause = whereClause != null && !whereClause.trim().isEmpty()? "where " + whereClause : "";
+    query = String.format("select * from %s %s", getTableName(), whereClause);
+    rs = database.executeQuery(query);
     try {
       while(rs.next())
       {
