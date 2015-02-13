@@ -23,15 +23,21 @@ public class Map implements HtmlComponent, JavaScriptComponent
   @Override
   public String getHTMLHeader()
   {
-    return "<link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/css/ol.css\" type=\"text/css\">" +
+    return "\n<link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/css/ol.css\" type=\"text/css\">" +
+           "\n<link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/resources/bootstrap/css/bootstrap.min.css\" type=\"text/css\">" +
+           "\n<link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/resources/bootstrap/css/bootstrap-responsive.min.css\" type=\"text/css\">" +
            "\n<style>" +
            "\n .map {" +
            "\n       height: " + height.toHTML() + ";" +
            "\n       width: " + width.toHTML() + ";" +
            "\n      }" +
            "\n</style>"+
-           "\n<script src=\"http://openlayers.org/en/v3.2.0/build/ol.js\" type=\"text/javascript\"></script>";
+           "\n<script src=\"http://openlayers.org/en/v3.2.0/build/ol.js\" type=\"text/javascript\"></script>" +
+           "\n<script src=\"http://openlayers.org/en/v3.2.0/resources/jquery.min.js\" type=\"text/javascript\"></script>" +
+           "\n<script src=\"http://openlayers.org/en/v3.2.0/resources/bootstrap/js/bootstrap.min.js\" type=\"text/javascript\"></script>" +
+           "\n<script src=\"http://openlayers.org/en/v3.2.0/resources/example-behaviour.js\" type=\"text/javascript\"></script>";
   }
+
 
 
   private JavaScriptSnippet layersToJavaScript()
@@ -58,7 +64,7 @@ public class Map implements HtmlComponent, JavaScriptComponent
     JavaScriptSnippet snippet;
     snippet = new JavaScriptSnippet();
     snippet.add("\n      var map = new ol.Map({" +
-    //            "\n   renderer: exampleNS.getRendererFromQueryString()," +
+                "\n   renderer: exampleNS.getRendererFromQueryString()," +
     "\n        target: 'map', " +
     "\n        layers:");
     snippet.add(layersToJavaScript());
@@ -75,7 +81,6 @@ public class Map implements HtmlComponent, JavaScriptComponent
     "});\n" +
     "map.addOverlay(popup);\n" +
     "\n" +
-    "// display popup on click\n" +
     "map.on('click', function(evt) {\n" +
     "  var feature = map.forEachFeatureAtPixel(evt.pixel,\n" +
     "      function(feature, layer) {\n" +
@@ -90,13 +95,12 @@ public class Map implements HtmlComponent, JavaScriptComponent
     "      'html': true,\n" +
     "      'content': feature.get('name')\n" +
     "    });\n" +
-    "    $(element).popover('show');\n" +
+    "    alert(feature.get('name'));$(element).popover('show');\n" +
     "  } else {\n" +
     "    $(element).popover('destroy');\n" +
     "  }\n" +
     "});\n" +
     "\n" +
-    "// change mouse cursor when over marker\n" +
     "map.on('pointermove', function(e) {\n" +
     "  if (e.dragging) {\n" +
     "    $(element).popover('destroy');\n" +
@@ -104,16 +108,15 @@ public class Map implements HtmlComponent, JavaScriptComponent
     "  }\n" +
     "  var pixel = map.getEventPixel(e.originalEvent);\n" +
     "  var hit = map.hasFeatureAtPixel(pixel);\n" +
-    "  map.getTarget().style.cursor = hit ? 'pointer' : '';\n" +
-    "});");
+    "  if (hit) {alert('hit ');}map.getTarget().style.cursor = hit ? 'pointer' : '';\n" +
+    " });");
     return snippet;
   }
 
   @Override
   public String toHTML()
   {
-    return "<div id='map' class='map'></div>" +
-           "\n<div id='popup' class='popup'></div>"+
+    return "<div id='map' class='map'><div id='popup'></div></div>" +
            "\n<script type=\"text/javascript\">" +
            "\n" + toJavaScript() +
            "\n</script>";

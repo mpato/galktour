@@ -12,6 +12,7 @@ import com.inbiqeba.galk.html.map.layers.VectorLayer;
 import com.inbiqeba.galk.html.map.sources.FeatureSource;
 import com.inbiqeba.galk.html.map.sources.FeatureSourceConverter;
 import com.inbiqeba.galk.html.map.sources.MapQuestSource;
+import com.inbiqeba.galk.html.map.sources.TileJSON;
 import com.inbiqeba.galk.html.page.MapPage;
 import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLiteDatabase;
@@ -45,7 +46,7 @@ public class Galk
     Thread t;
     SQLDatabase database;
     database = new SQLiteDatabase("galktour");
-    ApplicationContext.setDebug(false);
+    ApplicationContext.setDebug(true);
     ApplicationContext.setDataSource(database);
     ApplicationContext.seal();
     database.initialize();
@@ -130,9 +131,9 @@ public class Galk
       System.out.println("contextID: " + contextID);
       screen.getPointsOfInterest(contextID).map(converter);
       //features.addFeature(new Feature());
+      //map.addLayer(new TileLayer(new TileJSON("http://api.tiles.mapbox.com/v3/mapbox.geography-class.jsonp", "")));
       map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_OSM)));
       map.addLayer(new VectorLayer(features));
-      //map.addLayer(new TileLayer(new TileJSON("http://api.tiles.mapbox.com/v3/mapbox.geography-class.jsonp", "")));
       body = new StringEntity(new MapPage("Test map", map).toHTML());
       body.setContentType("text/html");
       response.setEntity(body);

@@ -27,7 +27,7 @@ public class MainMapScreen implements Screen
   {
     this.contexts = new HashMap<String, MainMapContext>();
     this.mainLocations = new SQLFilteredTable<PointOfInterest>(ApplicationContext.getPointsOfInterest())
-                           .filter("type", SQLFilteredTable.OP_EQUAL, PointOfInterest.TYPE_EMPTY);
+                           .filter("type", SQLFilteredTable.OP_EQUAL, PointOfInterest.TYPE_SUB_MAP);
   }
 
   @Override

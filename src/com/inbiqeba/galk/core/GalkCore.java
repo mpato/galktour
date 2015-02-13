@@ -22,6 +22,8 @@ public class GalkCore
     ApplicationContext.pointsOfInterest.insertNewRecord(transaction, new PointOfInterest(1, 0, 0, "Kingdom Of Galk", PointOfInterest.TYPE_SUB_MAP, 0));
     ApplicationContext.pointsOfInterest.insertNewRecord(transaction, new PointOfInterest(2, 0, 0, "Zero island", PointOfInterest.TYPE_EMPTY, 1));
     ApplicationContext.pointsOfInterest.insertNewRecord(transaction, new PointOfInterest(3, 10, 10, "Some other point island", PointOfInterest.TYPE_EMPTY, 1));
+    ApplicationContext.pointsOfInterest.insertNewRecord(transaction, new PointOfInterest(4, -20, 10, "Federal Republic of Northen Galk", PointOfInterest.TYPE_SUB_MAP, 0));
+    ApplicationContext.pointsOfInterest.insertNewRecord(transaction, new PointOfInterest(5, -170, 100, "Evil Land of Non-Galk", PointOfInterest.TYPE_SUB_MAP, 0));
     transaction.commit();
   }
 }
