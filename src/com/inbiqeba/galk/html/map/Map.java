@@ -66,6 +66,46 @@ public class Map implements HtmlComponent, JavaScriptComponent
     "\n        view: ");
     snippet.add(view.toJavaScript());
     snippet.add("\n      });");
+    snippet.add("var element = document.getElementById('popup');\n" +
+    "\n" +
+    "var popup = new ol.Overlay({\n" +
+    "  element: element,\n" +
+    "  positioning: 'bottom-center',\n" +
+    "  stopEvent: false\n" +
+    "});\n" +
+    "map.addOverlay(popup);\n" +
+    "\n" +
+    "// display popup on click\n" +
+    "map.on('click', function(evt) {\n" +
+    "  var feature = map.forEachFeatureAtPixel(evt.pixel,\n" +
+    "      function(feature, layer) {\n" +
+    "        return feature;\n" +
+    "      });\n" +
+    "  if (feature) {\n" +
+    "    var geometry = feature.getGeometry();\n" +
+    "    var coord = geometry.getCoordinates();\n" +
+    "    popup.setPosition(coord);\n" +
+    "    $(element).popover({\n" +
+    "      'placement': 'top',\n" +
+    "      'html': true,\n" +
+    "      'content': feature.get('name')\n" +
+    "    });\n" +
+    "    $(element).popover('show');\n" +
+    "  } else {\n" +
+    "    $(element).popover('destroy');\n" +
+    "  }\n" +
+    "});\n" +
+    "\n" +
+    "// change mouse cursor when over marker\n" +
+    "map.on('pointermove', function(e) {\n" +
+    "  if (e.dragging) {\n" +
+    "    $(element).popover('destroy');\n" +
+    "    return;\n" +
+    "  }\n" +
+    "  var pixel = map.getEventPixel(e.originalEvent);\n" +
+    "  var hit = map.hasFeatureAtPixel(pixel);\n" +
+    "  map.getTarget().style.cursor = hit ? 'pointer' : '';\n" +
+    "});");
     return snippet;
   }
 
@@ -73,6 +113,7 @@ public class Map implements HtmlComponent, JavaScriptComponent
   public String toHTML()
   {
     return "<div id='map' class='map'></div>" +
+           "\n<div id='popup' class='popup'></div>"+
            "\n<script type=\"text/javascript\">" +
            "\n" + toJavaScript() +
            "\n</script>";
