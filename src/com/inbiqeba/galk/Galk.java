@@ -1,8 +1,9 @@
 package com.inbiqeba.galk;
 
+import com.inbiqeba.galk.core.ApplicationContext;
+import com.inbiqeba.galk.core.GalkCore;
+import com.inbiqeba.galk.core.screen.MainMapScreen;
 import com.inbiqeba.galk.gui.RelativeLength;
-import com.inbiqeba.galk.gui.geometry.GeometryPoint;
-import com.inbiqeba.galk.html.map.Feature;
 import com.inbiqeba.galk.html.map.Map;
 import com.inbiqeba.galk.html.map.View;
 import com.inbiqeba.galk.html.map.coordinates.PlainCoordinates;
@@ -12,8 +13,7 @@ import com.inbiqeba.galk.html.map.sources.FeatureSource;
 import com.inbiqeba.galk.html.map.sources.FeatureSourceConverter;
 import com.inbiqeba.galk.html.map.sources.MapQuestSource;
 import com.inbiqeba.galk.html.page.MapPage;
-import com.inbiqeba.galk.sql.SQLFilteredTable;
-import com.inbiqeba.galk.sql.SQLTable;
+import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLiteDatabase;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
@@ -39,19 +39,18 @@ import java.util.Locale;
 
 public class Galk
 {
-  private static SQLTable<Feature> featureDataSet;
-
+  static GalkCore core;
   public static void main(String[] args) throws Exception
   {
     Thread t;
-    ApplicationContext.debug = false;
-    ApplicationContext.dataSource = new SQLiteDatabase("galktour");
-    ApplicationContext.dataSource.initialize();
-    featureDataSet = new FeatureDataSet();
-    featureDataSet = new SQLFilteredTable<Feature>(featureDataSet).filter("id", SQLFilteredTable.OP_EQUAL, 2);
-    ApplicationContext.addDataSet("feature", featureDataSet);
-    featureDataSet.insertNewRecord(new Feature(new GeometryPoint(0,0), "Zero island", 1));
-    featureDataSet.insertNewRecord(new Feature(new GeometryPoint(10,10), "Some other point island", 2));
+    SQLDatabase database;
+    database = new SQLiteDatabase("galktour");
+    ApplicationContext.setDebug(false);
+    ApplicationContext.setDataSource(database);
+    ApplicationContext.seal();
+    database.initialize();
+    core = new GalkCore();
+    core.initialize();
     t = new RequestListenerThread(8085);
     t.setDaemon(false);
     t.start();
@@ -97,7 +96,7 @@ public class Galk
     public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException
     {
       String target;
-      String method;
+      String method, contextID;
       HttpEntity entity;
       byte[] entityContent;
       StringEntity body;
@@ -125,7 +124,11 @@ public class Galk
       FeatureSourceConverter converter;
       features = new FeatureSource();
       converter = new FeatureSourceConverter(features);
-      featureDataSet.map(converter);
+      MainMapScreen screen;
+      screen = new MainMapScreen();
+      contextID = screen.registerNewContext();
+      System.out.println("contextID: " + contextID);
+      screen.getPointsOfInterest(contextID).map(converter);
       //features.addFeature(new Feature());
       map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_OSM)));
       map.addLayer(new VectorLayer(features));

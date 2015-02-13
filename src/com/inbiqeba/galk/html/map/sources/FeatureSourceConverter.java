@@ -1,9 +1,11 @@
 package com.inbiqeba.galk.html.map.sources;
 
+import com.inbiqeba.galk.data.PointOfInterest;
+import com.inbiqeba.galk.gui.geometry.GeometryPoint;
 import com.inbiqeba.galk.html.map.Feature;
 import com.inbiqeba.galk.sql.SQLSetConverter;
 
-public class FeatureSourceConverter implements SQLSetConverter<Feature>
+public class FeatureSourceConverter implements SQLSetConverter<PointOfInterest>
 {
   private FeatureSource source;
 
@@ -12,8 +14,12 @@ public class FeatureSourceConverter implements SQLSetConverter<Feature>
     this.source = source;
   }
 
-  public void convertSetElement(Feature element)
+  @Override
+  public void convertSetElement(String tag, PointOfInterest element)
   {
-    source.addFeature(element);
+    Feature feature;
+    feature = new Feature(new GeometryPoint(element.x, element.y), element.description, element.id);
+    feature.setTag(tag);
+    source.addFeature(feature);
   }
 }

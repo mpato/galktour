@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.sql;
 
+import java.sql.ResultSet;
 import java.util.Vector;
 
 public class SQLFilteredTable<T extends SQLObject> extends SQLTable<T>
@@ -32,12 +33,6 @@ public class SQLFilteredTable<T extends SQLObject> extends SQLTable<T>
   }
 
   @Override
-  public SQLDatabase getSQLDatabase()
-  {
-    return source.getSQLDatabase();
-  }
-
-  @Override
   public String getWhereClause()
   {
     return whereClause;
@@ -53,6 +48,30 @@ public class SQLFilteredTable<T extends SQLObject> extends SQLTable<T>
   public Vector<T> toVector()
   {
     return source.toVector();
+  }
+
+  @Override
+  public String getUpdateQuery(T record)
+  {
+    return source.getUpdateQuery(record);
+  }
+
+  @Override
+  public String getInsertQuery(T record)
+  {
+    return source.getInsertQuery(record);
+  }
+
+  @Override
+  public void fromSQLResult(T record, ResultSet result)
+  {
+    source.fromSQLResult(record, result);
+  }
+
+  @Override
+  protected int getRecordId(T record)
+  {
+    return source.getRecordId(record);
   }
 
   private void addToClause(String condition)

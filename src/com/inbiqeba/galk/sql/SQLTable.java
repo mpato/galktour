@@ -1,52 +1,54 @@
 package com.inbiqeba.galk.sql;
 
-import com.inbiqeba.galk.DataSet;
-import com.inbiqeba.galk.SetConverter;
+import com.inbiqeba.galk.data.SetConverter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
-public abstract class SQLTable<T extends SQLObject> implements DataSet<T>
+public abstract class SQLTable<T extends SQLObject>
 {
 
   public abstract String getTableName();
   public abstract T createEmptyRecord();
-  public abstract SQLDatabase getSQLDatabase();
   public abstract String getWhereClause();
+  public abstract String getCreateQuery();
+  public abstract Vector<T> toVector();
+  public abstract String getUpdateQuery(T record);
+  public abstract String getInsertQuery(T record);
+  public abstract void fromSQLResult(T record, ResultSet result);
+  protected abstract int getRecordId(T record);
 
-  @Override
-  public boolean insertNewRecord(T record)
+  public boolean insertNewRecord(SQLTransaction trans, T record)
   {
-    SQLDatabase database;
-    database = getSQLDatabase();
-    if (database == null)
+    if (trans == null)
       return false;
-    return database.executeInsert(record.getInsertQuery());
+    return trans.executeInsert(getInsertQuery(record));
   }
 
-  @Override
-  public void map(SetConverter<T> func)
+  public void map(SQLTransaction trans, SetConverter<T> func)
   {
-    SQLDatabase database;
     ResultSet rs;
     String whereClause, query;
     T record;
-    database = getSQLDatabase();
-    if (database == null)
+    if (trans == null)
       return;
     whereClause = getWhereClause();
     whereClause = whereClause != null && !whereClause.trim().isEmpty()? "where " + whereClause : "";
     query = String.format("select * from %s %s", getTableName(), whereClause);
-    rs = database.executeQuery(query);
+    rs = trans.executeQuery(query);
     try {
-      while(rs.next())
-      {
+      while (rs.next()) {
         record = createEmptyRecord();
-        record.fromSQLResult(rs);
-        func.convertSetElement(record);
+        fromSQLResult(record, rs);
+        func.convertSetElement(getRecordTag(record), record);
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
+  protected String getRecordTag(T record)
+  {
+    return getTableName() + "::" + getRecordId(record);
+  }
 }

@@ -18,7 +18,7 @@ public class SQLJavaScriptConverter<T extends SQLObject & JavaScriptComponent> i
   }
 
   @Override
-  public void convertSetElement(T element)
+  public void convertSetElement(String tag, T element)
   {
    scriptSnippet.add(element.toJavaScript());
   }

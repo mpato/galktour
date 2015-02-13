@@ -1,18 +1,16 @@
 package com.inbiqeba.galk.html.map;
 
-import com.inbiqeba.galk.FeatureDataSet;
 import com.inbiqeba.galk.gui.geometry.GeometryPoint;
 import com.inbiqeba.galk.html.JavaScriptComponent;
 import com.inbiqeba.galk.html.JavaScriptSnippet;
 import com.inbiqeba.galk.sql.SQLObject;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-public class Feature implements JavaScriptComponent, SQLObject
+public class Feature implements JavaScriptComponent
 {
   private GeometryPoint geometry;
   private String name;
   private int id;
+  private String tag;
 
   public Feature(GeometryPoint geometry, String name, int id)
   {
@@ -35,27 +33,13 @@ public class Feature implements JavaScriptComponent, SQLObject
     return snippet;
   }
 
-  @Override
-  public String getUpdateQuery()
+  public String getTag()
   {
-    return null;
+    return tag;
   }
 
-  @Override
-  public String getInsertQuery()
+  public void setTag(String tag)
   {
-    return String.format("insert into %s values(%d, '%s', %.4f, %.4f)", FeatureDataSet.getName(), id, name, geometry.getX(), geometry.getY());
-  }
-
-  @Override
-  public void fromSQLResult(ResultSet result)
-  {
-    try {
-      id = result.getInt("id");
-      geometry = new GeometryPoint(result.getDouble("point_x"), result.getDouble("point_y"));
-      name = result.getString("name");
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    this.tag = tag;
   }
 }

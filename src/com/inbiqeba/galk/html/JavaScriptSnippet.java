@@ -1,6 +1,6 @@
 package com.inbiqeba.galk.html;
 
-import com.inbiqeba.galk.ApplicationContext;
+import com.inbiqeba.galk.core.ApplicationContext;
 
 public class JavaScriptSnippet
 {
