@@ -4,6 +4,7 @@ import com.inbiqeba.galk.core.ApplicationContext;
 import com.inbiqeba.galk.core.GalkCore;
 import com.inbiqeba.galk.core.screen.MainMapScreen;
 import com.inbiqeba.galk.gui.RelativeLength;
+import com.inbiqeba.galk.html.Mime;
 import com.inbiqeba.galk.html.map.Map;
 import com.inbiqeba.galk.html.map.View;
 import com.inbiqeba.galk.html.map.coordinates.PlainCoordinates;
@@ -12,12 +13,13 @@ import com.inbiqeba.galk.html.map.layers.VectorLayer;
 import com.inbiqeba.galk.html.map.sources.FeatureSource;
 import com.inbiqeba.galk.html.map.sources.FeatureSourceConverter;
 import com.inbiqeba.galk.html.map.sources.MapQuestSource;
-import com.inbiqeba.galk.html.map.sources.TileJSON;
 import com.inbiqeba.galk.html.page.MapPage;
 import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLiteDatabase;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.http.impl.DefaultHttpResponseFactory;
@@ -30,10 +32,7 @@ import org.apache.http.protocol.*;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Locale;
@@ -94,6 +93,20 @@ public class Galk
       super();
     }
 
+    private void openFile(final HttpResponse response, String target)
+    {
+      FileEntity fileContent;
+      File file;
+      file = new File(target.substring(1));
+      if (file.exists() && file.canRead()) {
+        fileContent = new FileEntity(file);
+        fileContent.setContentType(Mime.getType(target));
+        response.setEntity(fileContent);
+      } else {
+        response.setStatusCode(HttpStatus.SC_NOT_FOUND);
+      }
+    }
+
     public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException
     {
       String target;
@@ -111,6 +124,12 @@ public class Galk
         throw new MethodNotSupportedException(method + " method not supported");
       }
       target = request.getRequestLine().getUri();
+      System.out.println("target = " + target);
+      if (target.startsWith("/resources/")) {
+        openFile(response, target);
+        return;
+      }
+
       System.out.println(request);
       if (request instanceof HttpEntityEnclosingRequest) {
         entity = ((HttpEntityEnclosingRequest) request).getEntity();
@@ -155,7 +174,7 @@ public class Galk
               .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024)
               .setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, false)
               .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true)
-              .setParameter(CoreProtocolPNames.ORIGIN_SERVER, "MPATO_BOOKMARKER/0.1");
+              .setParameter(CoreProtocolPNames.ORIGIN_SERVER, "INBIQEBA_GALK/0.1");
 
       // Set up the HTTP protocol processor
       HttpProcessor httpproc = new ImmutableHttpProcessor(new HttpResponseInterceptor[]{
