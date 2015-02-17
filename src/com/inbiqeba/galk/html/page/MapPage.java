@@ -1,9 +1,9 @@
 package com.inbiqeba.galk.html.page;
 
-import com.inbiqeba.galk.html.HtmlComponent;
+import com.inbiqeba.galk.html.HTMLComponent;
 import com.inbiqeba.galk.html.map.Map;
 
-public class MapPage implements HtmlComponent
+public class MapPage implements HTMLComponent
 {
   private String title;
   private Map map;

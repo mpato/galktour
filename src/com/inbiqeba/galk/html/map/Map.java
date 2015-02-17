@@ -1,12 +1,12 @@
 package com.inbiqeba.galk.html.map;
 
 import com.inbiqeba.galk.gui.Length;
-import com.inbiqeba.galk.html.HtmlComponent;
+import com.inbiqeba.galk.html.HTMLComponent;
 import com.inbiqeba.galk.html.JavaScriptComponent;
 import com.inbiqeba.galk.html.JavaScriptSnippet;
 import java.util.Vector;
 
-public class Map implements HtmlComponent, JavaScriptComponent
+public class Map implements HTMLComponent, JavaScriptComponent
 {
   private Vector<Layer> layers;
   private View view;
