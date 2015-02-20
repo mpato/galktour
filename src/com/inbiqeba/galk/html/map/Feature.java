@@ -3,6 +3,7 @@ package com.inbiqeba.galk.html.map;
 import com.inbiqeba.galk.gui.geometry.GeometryPoint;
 import com.inbiqeba.galk.html.JavaScriptComponent;
 import com.inbiqeba.galk.html.JavaScriptSnippet;
+import com.inbiqeba.galk.html.page.HTMLPage;
 import com.inbiqeba.galk.sql.SQLObject;
 
 public class Feature implements JavaScriptComponent

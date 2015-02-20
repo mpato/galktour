@@ -1,9 +1,7 @@
 package com.inbiqeba.galk.sql;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.inbiqeba.galk.data.SetConverter;
+import java.sql.*;
 
 public abstract class SQLTransaction
 {
@@ -58,5 +56,15 @@ public abstract class SQLTransaction
   public boolean executeInsert(String query)
   {
     return executeUpdate(query);
+  }
+
+  public PreparedStatement getPreparedStatement(String query)
+  {
+    try {
+      return connection.prepareStatement(query);
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

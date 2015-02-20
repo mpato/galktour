@@ -51,15 +51,15 @@ public class SQLFilteredTable<T extends SQLObject> extends SQLTable<T>
   }
 
   @Override
-  public String getUpdateQuery(T record)
+  public SQLObjectQuery<T> getUpdateQuery(SQLTransaction trans)
   {
-    return source.getUpdateQuery(record);
+    return source.getUpdateQuery(trans);
   }
 
   @Override
-  public String getInsertQuery(T record)
+  public SQLObjectQuery<T> getInsertQuery(SQLTransaction trans)
   {
-    return source.getInsertQuery(record);
+    return source.getInsertQuery(trans);
   }
 
   @Override

@@ -13,64 +13,55 @@ import java.util.UUID;
 public class MainMapScreen implements Screen
 {
   public static final int STATE_SHOW_MAP = 0;
+  public static final int STATE_DONE = 98;
+  public static final int STATE_DISCARDED = 99;
 
-  private class MainMapContext implements Context
-  {
-    int state;
-    SQLTransaction transaction;
-  }
+  private int state;
+  private int selectedPOI;
+  private SQLTransaction transaction;
 
   private SQLTable<PointOfInterest> mainLocations;
-  private HashMap<String, MainMapContext> contexts;
 
   public MainMapScreen()
   {
-    this.contexts = new HashMap<String, MainMapContext>();
     this.mainLocations = new SQLFilteredTable<PointOfInterest>(ApplicationContext.getPointsOfInterest())
                            .filter("type", SQLFilteredTable.OP_EQUAL, PointOfInterest.TYPE_SUB_MAP);
+    state = STATE_SHOW_MAP;
+    transaction = ApplicationContext.getDataSource().createNewTransaction();
+    transaction.start();
   }
 
   @Override
-  public String registerNewContext()
+  public void discardContext()
   {
-    MainMapContext newContext;
-    String tag;
-    tag = UUID.randomUUID().toString();
-    newContext = new MainMapContext();
-    newContext.state = STATE_SHOW_MAP;
-    newContext.transaction = ApplicationContext.getDataSource().createNewTransaction();
-    newContext.transaction.start();
-    contexts.put(tag, newContext);
-    return tag;
+    state = STATE_DISCARDED;
+    transaction.rollback();
   }
 
   @Override
-  public void discardContext(String contextID)
+  public boolean commitContext()
   {
+    state = STATE_DONE;
+    return transaction.commit();
   }
 
-  @Override
-  public boolean commitContext(String contextID)
+  public View<PointOfInterest> getPointsOfInterest()
   {
-    return false;
+    return mainLocations.getView(transaction);
   }
 
-  public View<PointOfInterest> getPointsOfInterest(String contextID)
+  public int getCurrentState()
   {
-    MainMapContext context;
-    context = contexts.get(contextID);
-    if (context == null)
-      return null;
-
-    return new SQLView<PointOfInterest>(mainLocations, context.transaction);
+    return state;
   }
 
-  public int getCurrentState(String contextID)
+  public void setSelectedPOI(int selectedPOI)
   {
-    MainMapContext context;
-    context = contexts.get(contextID);
-    if (context == null)
-      return -1;
-    return context.state;
+    this.selectedPOI = selectedPOI; //TODO check if the POI exists
+  }
+
+  public int getSelectedPOI()
+  {
+    return this.selectedPOI;
   }
 }

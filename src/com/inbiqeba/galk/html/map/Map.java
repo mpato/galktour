@@ -4,6 +4,7 @@ import com.inbiqeba.galk.gui.Length;
 import com.inbiqeba.galk.html.HTMLComponent;
 import com.inbiqeba.galk.html.JavaScriptComponent;
 import com.inbiqeba.galk.html.JavaScriptSnippet;
+import com.inbiqeba.galk.html.page.HTMLPage;
 import java.util.Vector;
 
 public class Map implements HTMLComponent, JavaScriptComponent
@@ -26,12 +27,6 @@ public class Map implements HTMLComponent, JavaScriptComponent
     return "\n<link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/css/ol.css\" type=\"text/css\">" +
            "\n<link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/resources/bootstrap/css/bootstrap.min.css\" type=\"text/css\">" +
            "\n<link rel=\"stylesheet\" href=\"http://openlayers.org/en/v3.2.0/resources/bootstrap/css/bootstrap-responsive.min.css\" type=\"text/css\">" +
-           "\n<style>" +
-           "\n .map {" +
-           "\n       height: " + height.toHTML() + ";" +
-           "\n       width: " + width.toHTML() + ";" +
-           "\n      }" +
-           "\n</style>"+
            "\n<script src=\"http://openlayers.org/en/v3.2.0/build/ol.js\" type=\"text/javascript\"></script>" +
            "\n<script src=\"http://openlayers.org/en/v3.2.0/resources/jquery.min.js\" type=\"text/javascript\"></script>" +
            "\n<script src=\"http://openlayers.org/en/v3.2.0/resources/bootstrap/js/bootstrap.min.js\" type=\"text/javascript\"></script>" +
@@ -95,7 +90,9 @@ public class Map implements HTMLComponent, JavaScriptComponent
     "      'html': true,\n" +
     "      'content': feature.get('name')\n" +
     "    });\n" +
-    "    alert(feature.get('name'));$(element).popover('show');\n" +
+    "    //alert(feature.get('name'));\n" +
+    "    $(element).popover('show');\n" +
+    "    post('', { contextID : context_id });\n" +
     "  } else {\n" +
     "    $(element).popover('destroy');\n" +
     "  }\n" +
@@ -108,7 +105,7 @@ public class Map implements HTMLComponent, JavaScriptComponent
     "  }\n" +
     "  var pixel = map.getEventPixel(e.originalEvent);\n" +
     "  var hit = map.hasFeatureAtPixel(pixel);\n" +
-    "  if (hit) {alert('hit ');}map.getTarget().style.cursor = hit ? 'pointer' : '';\n" +
+    "  map.getTarget().style.cursor = hit ? 'pointer' : '';\n" +
     " });");
     return snippet;
   }

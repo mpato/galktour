@@ -2,23 +2,13 @@ package com.inbiqeba.galk;
 
 import com.inbiqeba.galk.core.ApplicationContext;
 import com.inbiqeba.galk.core.GalkCore;
-import com.inbiqeba.galk.core.screen.MainMapScreen;
-import com.inbiqeba.galk.gui.RelativeLength;
+import com.inbiqeba.galk.html.HTMLQuery;
 import com.inbiqeba.galk.html.Mime;
-import com.inbiqeba.galk.html.map.Map;
-import com.inbiqeba.galk.html.map.View;
-import com.inbiqeba.galk.html.map.coordinates.PlainCoordinates;
-import com.inbiqeba.galk.html.map.layers.TileLayer;
-import com.inbiqeba.galk.html.map.layers.VectorLayer;
-import com.inbiqeba.galk.html.map.sources.FeatureSource;
-import com.inbiqeba.galk.html.map.sources.FeatureSourceConverter;
-import com.inbiqeba.galk.html.map.sources.MapQuestSource;
-import com.inbiqeba.galk.html.page.MapPage;
+import com.inbiqeba.galk.html.page.MapPageFactory;
 import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLiteDatabase;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
-import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
@@ -40,6 +30,7 @@ import java.util.Locale;
 public class Galk
 {
   static GalkCore core;
+  static PageDispatcher dispatcher;
   public static void main(String[] args) throws Exception
   {
     Thread t;
@@ -49,6 +40,8 @@ public class Galk
     ApplicationContext.setDataSource(database);
     ApplicationContext.seal();
     database.initialize();
+    dispatcher = new PageDispatcher();
+    dispatcher.registerPage("/", new MapPageFactory());
     core = new GalkCore();
     core.initialize();
     t = new RequestListenerThread(8085);
@@ -98,6 +91,16 @@ public class Galk
       FileEntity fileContent;
       File file;
       file = new File(target.substring(1));
+      try {
+        if (!file.getCanonicalPath().startsWith(new java.io.File(".").getCanonicalPath() + "/resources")) {
+          response.setStatusCode(HttpStatus.SC_FORBIDDEN);
+          return;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+        response.setStatusCode(HttpStatus.SC_FORBIDDEN);
+        return;
+      }
       if (file.exists() && file.canRead()) {
         fileContent = new FileEntity(file);
         fileContent.setContentType(Mime.getType(target));
@@ -109,13 +112,12 @@ public class Galk
 
     public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) throws HttpException, IOException
     {
-      String target;
-      String method, contextID;
+      String target, html;
+      String method;
+      HTMLQuery query;
       HttpEntity entity;
       byte[] entityContent;
       StringEntity body;
-      Map map;
-      FeatureSource features;
 
       entity = null;
       entityContent = new byte[0];
@@ -123,7 +125,9 @@ public class Galk
       if (!method.equals("POST") && !method.equals("GET")) {
         throw new MethodNotSupportedException(method + " method not supported");
       }
-      target = request.getRequestLine().getUri();
+      query = new HTMLQuery();
+      query.fromString(request.getRequestLine().getUri());
+      target = query.path;
       System.out.println("target = " + target);
       if (target.startsWith("/resources/")) {
         openFile(response, target);
@@ -134,26 +138,19 @@ public class Galk
       if (request instanceof HttpEntityEnclosingRequest) {
         entity = ((HttpEntityEnclosingRequest) request).getEntity();
         entityContent = EntityUtils.toByteArray(entity);
+        query.addFormData(new String(entityContent));
         System.out.println("Incoming entity content (bytes): " + entityContent.length);
       }
 
       System.out.println("Entity: " + new String(entityContent));
       response.setStatusCode(HttpStatus.SC_OK);
      // map = new Map(new View(new Transform(new PlainCoordinates(37.41, 8.82), "EPSG:4326", "EPSG:3857"), 4), new RelativeLength(100), new RelativeLength(100));
-      map = new Map(new View(new PlainCoordinates(0, 0), 4), new RelativeLength(50), new RelativeLength(100));
-      FeatureSourceConverter converter;
-      features = new FeatureSource();
-      converter = new FeatureSourceConverter(features);
-      MainMapScreen screen;
-      screen = new MainMapScreen();
-      contextID = screen.registerNewContext();
-      System.out.println("contextID: " + contextID);
-      screen.getPointsOfInterest(contextID).map(converter);
-      //features.addFeature(new Feature());
-      //map.addLayer(new TileLayer(new TileJSON("http://api.tiles.mapbox.com/v3/mapbox.geography-class.jsonp", "")));
-      map.addLayer(new TileLayer(new MapQuestSource(MapQuestSource.TYPE_OSM)));
-      map.addLayer(new VectorLayer(features));
-      body = new StringEntity(new MapPage("Test map", map).toHTML());
+      html = dispatcher.getPageHTML(target, query.values);
+      if (html == null) {
+        response.setStatusCode(HttpStatus.SC_NOT_FOUND);
+        return;
+      }
+      body = new StringEntity(html);
       body.setContentType("text/html");
       response.setEntity(body);
       System.out.println("Responding ...");

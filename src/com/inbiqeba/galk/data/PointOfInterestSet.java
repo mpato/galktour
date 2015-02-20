@@ -1,14 +1,37 @@
 package com.inbiqeba.galk.data;
 
-import com.inbiqeba.galk.core.ApplicationContext;
-import com.inbiqeba.galk.sql.SQLDatabase;
+import com.inbiqeba.galk.sql.SQLObjectQuery;
 import com.inbiqeba.galk.sql.SQLTable;
+import com.inbiqeba.galk.sql.SQLTransaction;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
 public class PointOfInterestSet extends SQLTable<PointOfInterest>
 {
+  class POIInsertQuery extends SQLObjectQuery<PointOfInterest>
+  {
+    POIInsertQuery(SQLTransaction trans)
+    {
+      statement = trans.getPreparedStatement("insert into " + PointOfInterestSet.getName() + " values(?, ?, ?, ?, ?, ?)");
+    }
+
+    @Override
+    public void instantiate(PointOfInterest record)
+    {
+      try {
+        statement.setInt(1, record.id);
+        statement.setString(2, record.description);
+        statement.setDouble(3, record.x);
+        statement.setDouble(4, record.y);
+        statement.setInt(5, record.type);
+        statement.setInt(6, record.parentId);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   @Override
   public String getCreateQuery()
   {
@@ -21,16 +44,19 @@ public class PointOfInterestSet extends SQLTable<PointOfInterest>
     return new Vector<PointOfInterest>();
   }
 
-  public String getUpdateQuery(PointOfInterest record)
+  @Override
+  public SQLObjectQuery<PointOfInterest> getUpdateQuery(SQLTransaction trans)
   {
     return null;
   }
 
-  public String getInsertQuery(PointOfInterest record)
+  @Override
+  public SQLObjectQuery<PointOfInterest> getInsertQuery(SQLTransaction trans)
   {
-    return String.format("insert into %s values(%d, '%s', %.4f, %.4f, %d, %d)", PointOfInterestSet.getName(), record.id, record.description, record.x, record.y, record.type, record.parentId);
+    return new POIInsertQuery(trans);
   }
 
+  @Override
   public void fromSQLResult(PointOfInterest record, ResultSet result)
   {
     try {
