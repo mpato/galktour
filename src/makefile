@@ -1,7 +1,7 @@
 ALL_CLASSES = $(shell find com/ -name "*.java")
 
 JAVAC = javac
-JAVAFLAGS = -cp ../lib/commons-io-2.4.jar:../lib/httpcore-4.2.4.jar:../lib/json-simple-1.1.1.jar:../lib/sqlite-jdbc-3.8.7.jar
+JAVAFLAGS = -cp ../lib/commons-io-2.4.jar:../lib/httpcore-4.2.4.jar:../lib/json-simple-1.1.1.jar:../lib/sqlite-jdbc-3.7.15-SNAPSHOT.jar
 JAR = jar
 JARFLAGS = cfm
 

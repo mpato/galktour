@@ -35,7 +35,7 @@ public class Galk
   {
     Thread t;
     SQLDatabase database;
-    database = new SQLiteDatabase("galktour");
+    database = new SQLiteDatabase("files/galktour");
     ApplicationContext.setDebug(true);
     ApplicationContext.setDataSource(database);
     ApplicationContext.seal();
