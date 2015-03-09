@@ -1,9 +1,7 @@
 package com.inbiqeba.galk.sql;
 
-import com.inbiqeba.galk.data.SetConverter;
-import java.sql.PreparedStatement;
+import com.inbiqeba.galk.core.data.SetConverter;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
 
 public abstract class SQLTable<T extends SQLObject>

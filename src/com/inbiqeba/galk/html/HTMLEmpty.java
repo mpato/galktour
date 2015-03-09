@@ -1,5 +1,7 @@
 package com.inbiqeba.galk.html;
 
+import com.inbiqeba.galk.core.utils.ByteBuffer;
+
 public class HTMLEmpty implements HTMLComponent
 {
   @Override
@@ -12,5 +14,10 @@ public class HTMLEmpty implements HTMLComponent
   public String toHTML()
   {
     return "";
+  }
+
+  @Override
+  public void toByteBuffer(ByteBuffer buffer)
+  {
   }
 }

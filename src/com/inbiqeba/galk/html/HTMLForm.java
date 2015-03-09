@@ -1,8 +1,12 @@
 package com.inbiqeba.galk.html;
 
+import com.inbiqeba.galk.core.utils.ByteBuffer;
+import com.inbiqeba.galk.core.utils.template.TemplateReader;
+import com.inbiqeba.galk.core.utils.template.TemplateWriter;
+import com.inbiqeba.galk.core.utils.template.VariableMap;
 import java.util.HashMap;
 
-public class HTMLForm implements HTMLComponent
+public class HTMLForm implements HTMLComponent, TemplateWriter
 {
   public static final int INPUT_TYPE_TEXT = 0;
   public static final int INPUT_TYPE_PASSWORD = 1;
@@ -47,12 +51,18 @@ public class HTMLForm implements HTMLComponent
     {
      return toHTML(null);
     }
+
+    @Override
+    public void toByteBuffer(ByteBuffer buffer)
+    {
+      buffer.put(toHTML());
+    }
   }
 
   public static final int METHOD_POST = 0;
   public static final int METHOD_GET = 1;
 
-  private HTMLCollection inputs;
+  private HTMLCollection<FormInput> inputs;
   private String action;
   private int method;
   private HashMap<String, String> values;
@@ -61,7 +71,7 @@ public class HTMLForm implements HTMLComponent
   {
     this.action = action;
     this.method = method;
-    this.inputs = new HTMLCollection();
+    this.inputs = new HTMLCollection<FormInput>();
   }
 
   public void add(String name, int type, String value)
@@ -82,9 +92,43 @@ public class HTMLForm implements HTMLComponent
     return "";
   }
 
+  private void toByteBuffer(ByteBuffer buffer, TemplateReader template)
+  {
+    buffer.put(String.format("<form action\"%s\" method=\"%s\">", action, method == METHOD_GET ? "GET" : "POST"));
+    if (template != null)
+      addInputsToTemplate(template);
+    else
+      inputs.toByteBuffer(buffer);
+    buffer.put("</form>");
+  }
+
+  private void addInputsToTemplate(TemplateReader template)
+  {
+    HashMap<String, HTMLComponent> hashMap;
+    hashMap = new HashMap<String, HTMLComponent>();
+    for (FormInput input : inputs)
+      hashMap.put(input.name.toUpperCase(), input);
+    template.process(new VariableMap<HTMLComponent>(hashMap));
+  }
+
   @Override
   public String toHTML()
   {
-    return String.format("<form action\"%s\" method=\"%s\">\n%s\n</form>", action, method == METHOD_GET ? "GET" : "POST", inputs.toHTML());
+    ByteBuffer buffer;
+    buffer = new ByteBuffer();
+    toByteBuffer(buffer);
+    return buffer.toString();
+  }
+
+  @Override
+  public void toByteBuffer(ByteBuffer buffer)
+  {
+    toByteBuffer(buffer, null);
+  }
+
+  @Override
+  public void instanciate(TemplateReader reader)
+  {
+    toByteBuffer(reader.getOutput(), reader);
   }
 }

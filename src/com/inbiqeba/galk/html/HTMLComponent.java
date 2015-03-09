@@ -1,6 +1,8 @@
 package com.inbiqeba.galk.html;
 
-public interface HTMLComponent
+import com.inbiqeba.galk.core.utils.ByteObject;
+
+public interface HTMLComponent extends ByteObject
 {
   public String getHTMLHeader();
   public String toHTML();

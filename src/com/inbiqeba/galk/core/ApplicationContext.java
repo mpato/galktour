@@ -1,9 +1,8 @@
 package com.inbiqeba.galk.core;
 
-import com.inbiqeba.galk.html.map.Feature;
 import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLTable;
-import com.inbiqeba.galk.data.PointOfInterest;
+import com.inbiqeba.galk.core.data.PointOfInterest;
 
 public class ApplicationContext
 {

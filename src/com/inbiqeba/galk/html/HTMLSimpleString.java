@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.html;
 
+import com.inbiqeba.galk.core.utils.ByteBuffer;
 
 public class HTMLSimpleString implements HTMLComponent
 {
@@ -20,5 +21,11 @@ public class HTMLSimpleString implements HTMLComponent
   public String toHTML()
   {
     return text;
+  }
+
+  @Override
+  public void toByteBuffer(ByteBuffer buffer)
+  {
+    buffer.put(text);
   }
 }

@@ -1,4 +1,4 @@
-package com.inbiqeba.galk.data;
+package com.inbiqeba.galk.core.data;
 
 import com.inbiqeba.galk.sql.SQLObjectQuery;
 import com.inbiqeba.galk.sql.SQLTable;

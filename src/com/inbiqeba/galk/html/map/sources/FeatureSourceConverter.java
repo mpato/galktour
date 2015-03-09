@@ -1,6 +1,6 @@
 package com.inbiqeba.galk.html.map.sources;
 
-import com.inbiqeba.galk.data.PointOfInterest;
+import com.inbiqeba.galk.core.data.PointOfInterest;
 import com.inbiqeba.galk.gui.geometry.GeometryPoint;
 import com.inbiqeba.galk.html.map.Feature;
 import com.inbiqeba.galk.sql.SQLSetConverter;

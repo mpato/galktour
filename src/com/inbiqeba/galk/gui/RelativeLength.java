@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.gui;
 
+import com.inbiqeba.galk.core.utils.ByteBuffer;
 
 public class RelativeLength implements Length
 {
@@ -20,5 +21,11 @@ public class RelativeLength implements Length
   public String toHTML()
   {
     return value + "%";
+  }
+
+  @Override
+  public void toByteBuffer(ByteBuffer buffer)
+  {
+    buffer.put(toHTML());
   }
 }

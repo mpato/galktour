@@ -1,5 +1,6 @@
 package com.inbiqeba.galk.html.map;
 
+import com.inbiqeba.galk.core.utils.ByteBuffer;
 import com.inbiqeba.galk.gui.Length;
 import com.inbiqeba.galk.html.HTMLComponent;
 import com.inbiqeba.galk.html.JavaScriptComponent;
@@ -122,5 +123,11 @@ public class Map implements HTMLComponent, JavaScriptComponent
   public void addLayer(Layer layer)
   {
     layers.add(layer);
+  }
+
+  @Override
+  public void toByteBuffer(ByteBuffer buffer)
+  {
+    buffer.put(toHTML());
   }
 }

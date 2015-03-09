@@ -1,6 +1,5 @@
 package com.inbiqeba.galk.sql;
 
-import com.inbiqeba.galk.data.SetConverter;
 import java.sql.*;
 
 public abstract class SQLTransaction

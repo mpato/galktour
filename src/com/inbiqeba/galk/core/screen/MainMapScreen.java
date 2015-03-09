@@ -1,14 +1,11 @@
 package com.inbiqeba.galk.core.screen;
 
 import com.inbiqeba.galk.core.ApplicationContext;
-import com.inbiqeba.galk.data.View;
+import com.inbiqeba.galk.core.data.View;
 import com.inbiqeba.galk.sql.SQLFilteredTable;
 import com.inbiqeba.galk.sql.SQLTransaction;
-import com.inbiqeba.galk.sql.SQLView;
 import com.inbiqeba.galk.sql.SQLTable;
-import com.inbiqeba.galk.data.PointOfInterest;
-import java.util.HashMap;
-import java.util.UUID;
+import com.inbiqeba.galk.core.data.PointOfInterest;
 
 public class MainMapScreen implements Screen
 {

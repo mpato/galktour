@@ -1,5 +1,7 @@
 package com.inbiqeba.galk.gui;
 
+import com.inbiqeba.galk.core.utils.ByteBuffer;
+
 public class PixelLength implements Length
 {
   private int value;
@@ -19,5 +21,11 @@ public class PixelLength implements Length
   public String toHTML()
   {
     return value + "px";
+  }
+
+  @Override
+  public void toByteBuffer(ByteBuffer buffer)
+  {
+    buffer.put(toHTML());
   }
 }

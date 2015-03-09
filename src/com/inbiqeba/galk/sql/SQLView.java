@@ -1,11 +1,10 @@
 package com.inbiqeba.galk.sql;
 
-import com.inbiqeba.galk.data.SetConverter;
-import com.inbiqeba.galk.data.View;
+import com.inbiqeba.galk.core.data.SetConverter;
+import com.inbiqeba.galk.core.data.View;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 
 public class SQLView<T extends SQLObject> implements View<T>
 {

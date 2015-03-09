@@ -1,4 +1,4 @@
-package com.inbiqeba.galk.data;
+package com.inbiqeba.galk.core.data;
 
 public interface View<T>
 {

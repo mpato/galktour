@@ -1,7 +1,6 @@
-package com.inbiqeba.galk.data;
+package com.inbiqeba.galk.core.data;
 
 import com.inbiqeba.galk.sql.SQLObject;
-import java.sql.ResultSet;
 
 public class PointOfInterest implements SQLObject
 {

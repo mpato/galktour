@@ -1,6 +1,7 @@
 package com.inbiqeba.galk.web;
 
 import com.inbiqeba.galk.core.screen.MainMapScreen;
+import com.inbiqeba.galk.core.utils.ByteBuffer;
 import com.inbiqeba.galk.gui.RelativeLength;
 import com.inbiqeba.galk.html.HTMLForm;
 import com.inbiqeba.galk.html.HTMLComponent;
@@ -80,5 +81,11 @@ public class MapPage extends TemplatePage implements HTMLComponent
   public void setFormValues(HashMap<String, String> values)
   {
     form.setFormValues(values);
+  }
+
+  @Override
+  public void toByteBuffer(ByteBuffer buffer)
+  {
+    buffer.put(toHTML());
   }
 }
