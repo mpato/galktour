@@ -5,12 +5,15 @@ import com.inbiqeba.galk.core.data.PointOfInterestSet;
 import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLTransaction;
 
+import java.util.Locale;
+
 public class GalkCore
 {
   public void initialize()
   {
     SQLDatabase database;
     SQLTransaction transaction;
+    Locale.setDefault(Locale.US);
     database = ApplicationContext.getDataSource();
     ApplicationContext.pointsOfInterest = new PointOfInterestSet();
     transaction = database.createNewTransaction();

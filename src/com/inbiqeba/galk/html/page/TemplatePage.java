@@ -78,10 +78,6 @@ public abstract class TemplatePage implements HTMLPage
         e.printStackTrace();
       }
     }
-    CopyOnWriteArrayList<?> s;
-    HashMap<?> r;
-    s.add(E);
-
     return "";
   }
 }

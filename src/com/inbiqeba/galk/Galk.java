@@ -92,7 +92,7 @@ public class Galk
       File file;
       file = new File(target.substring(1));
       try {
-        if (!file.getCanonicalPath().startsWith(new java.io.File(".").getCanonicalPath() + "/resources")) {
+        if (!file.getCanonicalPath().startsWith(new java.io.File("./resources").getCanonicalPath())) {
           response.setStatusCode(HttpStatus.SC_FORBIDDEN);
           return;
         }
