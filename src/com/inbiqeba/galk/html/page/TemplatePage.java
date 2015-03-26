@@ -43,20 +43,6 @@ public abstract class TemplatePage implements HTMLPage
     return ret;
   }
 
-  private String readFile()
-  {
-    File file;
-    file = new File(String.format("files/pages/templates/%s.html", templateName));
-    if (file.exists() && file.canRead()) {
-      try {
-        return new String(Files.readAllBytes(Paths.get(file.getAbsolutePath(), "")), StandardCharsets.UTF_8); // the lazy way
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    return "";
-  }
-
   @Override
   public String toHTML()
   {
@@ -78,6 +64,7 @@ public abstract class TemplatePage implements HTMLPage
         e.printStackTrace();
       }
     }
+
     return "";
   }
 }

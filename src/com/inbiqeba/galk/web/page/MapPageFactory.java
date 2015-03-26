@@ -1,6 +1,6 @@
-package com.inbiqeba.galk.html.page;
+package com.inbiqeba.galk.web.page;
 
-import com.inbiqeba.galk.web.MapPage;
+import com.inbiqeba.galk.html.page.PageFactory;
 
 public class MapPageFactory extends PageFactory<MapPage>
 {

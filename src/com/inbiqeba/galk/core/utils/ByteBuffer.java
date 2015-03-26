@@ -9,7 +9,6 @@ public class ByteBuffer
   {
     this.buffer = new byte[capacity];
     this.pos = 0;
-    resize(capacity);
   }
 
   public ByteBuffer()
@@ -26,8 +25,7 @@ public class ByteBuffer
   {
     byte oldBuffer[];
     oldBuffer = buffer;
-    capacity = newCapacity;
-    capacity = (int)(Math.ceil(capacity / 2048.0)) * 2048;
+    capacity = newCapacity * 2;
     buffer = new byte[capacity];
     if (oldBuffer != null)
       System.arraycopy(oldBuffer, 0, buffer, 0, oldBuffer.length);

@@ -4,7 +4,7 @@ import com.inbiqeba.galk.core.ApplicationContext;
 import com.inbiqeba.galk.core.GalkCore;
 import com.inbiqeba.galk.html.HTMLQuery;
 import com.inbiqeba.galk.html.Mime;
-import com.inbiqeba.galk.html.page.MapPageFactory;
+import com.inbiqeba.galk.web.page.MapPageFactory;
 import com.inbiqeba.galk.sql.SQLDatabase;
 import com.inbiqeba.galk.sql.SQLiteDatabase;
 import org.apache.commons.io.IOUtils;
@@ -92,7 +92,7 @@ public class Galk
       File file;
       file = new File(target.substring(1));
       try {
-        if (!file.getCanonicalPath().startsWith(new java.io.File("./resources").getCanonicalPath())) {
+        if (!file.getCanonicalPath().startsWith(new java.io.File(".").getCanonicalPath() + "/resources")) {
           response.setStatusCode(HttpStatus.SC_FORBIDDEN);
           return;
         }

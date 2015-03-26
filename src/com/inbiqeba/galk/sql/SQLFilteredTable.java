@@ -77,7 +77,7 @@ public class SQLFilteredTable<T extends SQLObject> extends SQLTable<T>
   private void addToClause(String condition)
   {
     if (!whereClause.isEmpty())
-      whereClause += ",";
+      whereClause += "AND";
     whereClause += condition;
   }
 

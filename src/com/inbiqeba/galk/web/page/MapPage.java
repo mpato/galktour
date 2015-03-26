@@ -1,4 +1,4 @@
-package com.inbiqeba.galk.web;
+package com.inbiqeba.galk.web.page;
 
 import com.inbiqeba.galk.core.screen.MainMapScreen;
 import com.inbiqeba.galk.core.utils.ByteBuffer;

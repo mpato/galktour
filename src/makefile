@@ -7,8 +7,8 @@ JARFLAGS = cfm
 
 all: ../galk.jar
 
-../galk.jar: $(ALL_CLASSES) $(EMBEDDED_GZ) makefile
-	@set -e; echo -e "CPIO\t$@";					\
+../galk.jar: $(ALL_CLASSES) makefile
+	@set -e; echo -e "JAVA\t$@";					\
 	$(JAVAC) $(JAVAFLAGS) $(ALL_CLASSES);				\
 	$(JAR) $(JARFLAGS) ../galk.jar Manifest.txt `find com/ -name "*.class"`        
 
