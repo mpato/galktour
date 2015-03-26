@@ -64,7 +64,6 @@ public abstract class TemplatePage implements HTMLPage
         e.printStackTrace();
       }
     }
-
     return "";
   }
 }
